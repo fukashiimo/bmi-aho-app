@@ -347,6 +347,7 @@
         line-height: 1;
         opacity: 0.86;
         position: absolute;
+        transition: left 7s ease-in-out, top 7s ease-in-out, transform 7s ease-in-out;
         width: 46px;
       }
 
@@ -386,19 +387,19 @@
       }
 
       .background-character.one {
-        animation: drift-one 18s ease-in-out infinite;
+        transform: rotate(-9deg);
       }
 
       .background-character.two {
-        animation: drift-two 22s ease-in-out infinite;
+        transform: rotate(8deg);
       }
 
       .background-character.three {
-        animation: drift-three 20s ease-in-out infinite;
+        transform: rotate(5deg);
       }
 
       .background-character.four {
-        animation: drift-four 24s ease-in-out infinite;
+        transform: rotate(-4deg);
       }
 
       @keyframes title-wiggle {
@@ -474,50 +475,6 @@
         }
       }
 
-      @keyframes drift-one {
-        0%,
-        100% {
-          transform: translate(0, 0) rotate(-9deg);
-        }
-
-        50% {
-          transform: translate(38px, 26px) rotate(7deg);
-        }
-      }
-
-      @keyframes drift-two {
-        0%,
-        100% {
-          transform: translate(0, 0) rotate(8deg);
-        }
-
-        50% {
-          transform: translate(-42px, 34px) rotate(-6deg);
-        }
-      }
-
-      @keyframes drift-three {
-        0%,
-        100% {
-          transform: translate(0, 0) rotate(5deg);
-        }
-
-        50% {
-          transform: translate(46px, -30px) rotate(-10deg);
-        }
-      }
-
-      @keyframes drift-four {
-        0%,
-        100% {
-          transform: translate(0, 0) rotate(-4deg);
-        }
-
-        50% {
-          transform: translate(-34px, -36px) rotate(9deg);
-        }
-      }
-
       @media (max-width: 520px) {
         body {
           padding: 14px;
@@ -557,6 +514,10 @@
           animation-iteration-count: 1 !important;
           scroll-behavior: auto !important;
           transition-duration: 1ms !important;
+        }
+
+        .background-character {
+          transition-duration: 8s !important;
         }
       }
     </style>
@@ -781,19 +742,29 @@
       });
 
       const backgroundZones = [
-        { x: [0, 5], y: [16, 34] },
-        { x: [88, 94], y: [12, 32] },
-        { x: [0, 6], y: [62, 82] },
-        { x: [88, 94], y: [58, 80] },
+        { x: [0, 18], y: [10, 40] },
+        { x: [76, 94], y: [8, 38] },
+        { x: [0, 20], y: [58, 86] },
+        { x: [76, 94], y: [56, 86] },
       ];
 
-      backgroundCharacters.forEach((character, index) => {
-        const zone = backgroundZones[index % backgroundZones.length];
+      function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+      }
 
-        character.style.left = `${zone.x[0] + Math.random() * (zone.x[1] - zone.x[0])}%`;
-        character.style.top = `${zone.y[0] + Math.random() * (zone.y[1] - zone.y[0])}%`;
-        character.style.animationDelay = `${Math.random() * -18}s`;
-        character.style.animationDuration = `${18 + Math.random() * 12}s`;
+      function moveBackgroundCharacter(character, index) {
+        const zone = backgroundZones[index % backgroundZones.length];
+        const duration = randomBetween(8, 14);
+
+        character.style.transitionDuration = `${duration}s`;
+        character.style.left = `${randomBetween(zone.x[0], zone.x[1])}%`;
+        character.style.top = `${randomBetween(zone.y[0], zone.y[1])}%`;
+        character.style.transform = `rotate(${randomBetween(-14, 14)}deg)`;
+      }
+
+      backgroundCharacters.forEach((character, index) => {
+        moveBackgroundCharacter(character, index);
+        setInterval(() => moveBackgroundCharacter(character, index), randomBetween(5200, 8200));
       });
 
       form.addEventListener("submit", (event) => {
