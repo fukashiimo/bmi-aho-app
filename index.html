@@ -50,7 +50,7 @@
       }
 
       main {
-        width: min(100%, 560px);
+        width: min(calc(100vw - 48px), 560px);
         position: relative;
         z-index: 1;
       }
@@ -477,13 +477,42 @@
 
       @media (max-width: 520px) {
         body {
-          padding: 14px;
+          padding: 12px;
+        }
+
+        main {
+          width: min(calc(100vw - 24px), 560px);
         }
 
         .header,
         form {
           padding-left: 18px;
           padding-right: 18px;
+        }
+
+        .header {
+          padding-top: 18px;
+          padding-bottom: 14px;
+        }
+
+        h1 {
+          font-size: 24px;
+          line-height: 1.08;
+          margin-bottom: 8px;
+          text-shadow: 2px 2px 0 var(--yellow);
+        }
+
+        p {
+          font-size: 13px;
+          line-height: 1.5;
+        }
+
+        .ticker {
+          font-size: 11px;
+        }
+
+        .ticker span {
+          padding: 6px 0;
         }
 
         .fields {
@@ -495,8 +524,22 @@
         }
 
         .app {
-          box-shadow: 6px 6px 0 var(--line), 0 18px 50px rgba(31, 36, 40, 0.16);
+          box-shadow: 4px 4px 0 var(--line), 0 14px 36px rgba(31, 36, 40, 0.14);
           transform: none;
+        }
+
+        .result {
+          min-height: 104px;
+          padding: 14px;
+        }
+
+        .message {
+          font-size: 22px;
+        }
+
+        .detail {
+          font-size: 13px;
+          line-height: 1.45;
         }
 
         .header::after,
