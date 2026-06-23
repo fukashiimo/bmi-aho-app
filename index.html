@@ -547,11 +547,11 @@
           <fieldset>
             <legend>性別</legend>
             <div class="gender-options">
-              <button class="gender-option" type="button" data-gender="male" data-default-height="171" aria-pressed="true">
+              <button class="gender-option" type="button" data-gender="male" data-default-height="171" data-default-weight="65" aria-pressed="true">
                 男
               </button>
 
-              <button class="gender-option" type="button" data-gender="female" data-default-height="158" aria-pressed="false">
+              <button class="gender-option" type="button" data-gender="female" data-default-height="158" data-default-weight="52" aria-pressed="false">
                 女
               </button>
             </div>
@@ -565,7 +565,7 @@
 
             <label>
               体重(kg)
-              <input id="weight" name="weight" type="number" inputmode="decimal" min="1" step="0.1" placeholder="55" required>
+              <input id="weight" name="weight" type="number" inputmode="decimal" min="1" step="0.1" value="65" required>
             </label>
           </div>
 
@@ -738,6 +738,7 @@
             button.setAttribute("aria-pressed", String(button === genderButton));
           });
           heightInput.value = genderButton.dataset.defaultHeight;
+          weightInput.value = genderButton.dataset.defaultWeight;
         });
       });
 
