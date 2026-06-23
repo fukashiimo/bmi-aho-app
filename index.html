@@ -44,7 +44,7 @@
       body,
       .ticker,
       .noise,
-      .cursor-friends {
+      .background-friends {
         cursor: default;
         user-select: none;
       }
@@ -52,6 +52,7 @@
       main {
         width: min(100%, 560px);
         position: relative;
+        z-index: 1;
       }
 
       .app {
@@ -162,27 +163,6 @@
         grid-template-columns: auto 1fr;
         min-height: 48px;
         padding: 10px 12px;
-        position: relative;
-        transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-      }
-
-      .gender-option:has(input:checked) {
-        background: #fff5eb;
-        border-color: var(--accent);
-        box-shadow: inset 0 0 0 3px rgba(226, 77, 61, 0.14), 0 0 0 2px rgba(226, 77, 61, 0.08);
-      }
-
-      .gender-option:has(input:checked)::after {
-        background: var(--yellow);
-        border: 2px solid var(--line);
-        border-radius: 999px;
-        content: "";
-        height: 13px;
-        position: absolute;
-        right: 8px;
-        top: 8px;
-        transform: rotate(3deg);
-        width: 13px;
       }
 
       .gender-option input {
@@ -333,17 +313,17 @@
         animation: float-right 4.1s ease-in-out infinite;
       }
 
-      .cursor-friends {
-        height: 0;
+      .background-friends {
+        bottom: 0;
         left: 0;
         pointer-events: none;
         position: fixed;
+        right: 0;
         top: 0;
-        width: 0;
-        z-index: 20;
+        z-index: 0;
       }
 
-      .cursor-character {
+      .background-character {
         align-items: center;
         background: #fff;
         border: 3px solid var(--line);
@@ -355,15 +335,13 @@
         height: 46px;
         justify-items: center;
         line-height: 1;
-        opacity: 0;
+        opacity: 0.86;
         position: absolute;
-        transform: translate(-999px, -999px);
-        transition: opacity 160ms ease;
         width: 46px;
       }
 
-      .cursor-character::before,
-      .cursor-character::after {
+      .background-character::before,
+      .background-character::after {
         background: var(--line);
         border-radius: 999px;
         content: "";
@@ -373,32 +351,44 @@
         width: 5px;
       }
 
-      .cursor-character::before {
+      .background-character::before {
         left: 13px;
       }
 
-      .cursor-character::after {
+      .background-character::after {
         right: 13px;
       }
 
-      .cursor-character span {
+      .background-character span {
         margin-top: 10px;
       }
 
-      .cursor-character.thin {
+      .background-character.thin {
         border-radius: 18px 18px 999px 999px;
         height: 58px;
         width: 34px;
       }
 
-      .cursor-character.chubby {
+      .background-character.chubby {
         background: #ffe8a3;
         height: 54px;
         width: 58px;
       }
 
-      .cursor-friends.is-visible .cursor-character {
-        opacity: 1;
+      .background-character.one {
+        animation: drift-one 18s ease-in-out infinite;
+      }
+
+      .background-character.two {
+        animation: drift-two 22s ease-in-out infinite;
+      }
+
+      .background-character.three {
+        animation: drift-three 20s ease-in-out infinite;
+      }
+
+      .background-character.four {
+        animation: drift-four 24s ease-in-out infinite;
       }
 
       @keyframes title-wiggle {
@@ -474,6 +464,50 @@
         }
       }
 
+      @keyframes drift-one {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(-9deg);
+        }
+
+        50% {
+          transform: translate(38px, 26px) rotate(7deg);
+        }
+      }
+
+      @keyframes drift-two {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(8deg);
+        }
+
+        50% {
+          transform: translate(-42px, 34px) rotate(-6deg);
+        }
+      }
+
+      @keyframes drift-three {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(5deg);
+        }
+
+        50% {
+          transform: translate(46px, -30px) rotate(-10deg);
+        }
+      }
+
+      @keyframes drift-four {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(-4deg);
+        }
+
+        50% {
+          transform: translate(-34px, -36px) rotate(9deg);
+        }
+      }
+
       @media (max-width: 520px) {
         body {
           padding: 14px;
@@ -500,7 +534,7 @@
 
         .header::after,
         .noise,
-        .cursor-friends {
+        .background-friends {
           display: none;
         }
       }
@@ -518,9 +552,11 @@
     </style>
   </head>
   <body>
-    <div class="cursor-friends" aria-hidden="true">
-      <div class="cursor-character thin"><span aria-hidden="true">ほそ</span></div>
-      <div class="cursor-character chubby"><span aria-hidden="true">ぽちゃ</span></div>
+    <div class="background-friends" aria-hidden="true">
+      <div class="background-character thin one"><span aria-hidden="true">ほそ</span></div>
+      <div class="background-character chubby two"><span aria-hidden="true">ぽちゃ</span></div>
+      <div class="background-character chubby three"><span aria-hidden="true">ぽちゃ</span></div>
+      <div class="background-character thin four"><span aria-hidden="true">ほそ</span></div>
     </div>
 
     <main>
@@ -580,9 +616,7 @@
       const weightInput = document.querySelector("#weight");
       const result = document.querySelector("#result");
       const genderInputs = document.querySelectorAll("input[name='gender']");
-      const cursorFriends = document.querySelector(".cursor-friends");
-      const thinFriend = document.querySelector(".cursor-character.thin");
-      const chubbyFriend = document.querySelector(".cursor-character.chubby");
+      const backgroundCharacters = document.querySelectorAll(".background-character");
       const bmiJudgements = [
         {
           max: 15,
@@ -733,36 +767,25 @@
         genderInput.addEventListener("change", () => {
           if (genderInput.checked) {
             heightInput.value = genderInput.dataset.defaultHeight;
-            heightInput.blur();
           }
         });
       });
 
-      let pointerX = window.innerWidth / 2;
-      let pointerY = window.innerHeight / 2;
-      let thinX = pointerX;
-      let thinY = pointerY;
-      let chubbyX = pointerX;
-      let chubbyY = pointerY;
+      const backgroundZones = [
+        { x: [0, 5], y: [16, 34] },
+        { x: [88, 94], y: [12, 32] },
+        { x: [0, 6], y: [62, 82] },
+        { x: [88, 94], y: [58, 80] },
+      ];
 
-      window.addEventListener("pointermove", (event) => {
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        cursorFriends.classList.add("is-visible");
+      backgroundCharacters.forEach((character, index) => {
+        const zone = backgroundZones[index % backgroundZones.length];
+
+        character.style.left = `${zone.x[0] + Math.random() * (zone.x[1] - zone.x[0])}%`;
+        character.style.top = `${zone.y[0] + Math.random() * (zone.y[1] - zone.y[0])}%`;
+        character.style.animationDelay = `${Math.random() * -18}s`;
+        character.style.animationDuration = `${18 + Math.random() * 12}s`;
       });
-
-      function moveCursorFriends() {
-        thinX += (pointerX + 18 - thinX) * 0.22;
-        thinY += (pointerY + 24 - thinY) * 0.22;
-        chubbyX += (pointerX + 50 - chubbyX) * 0.14;
-        chubbyY += (pointerY + 36 - chubbyY) * 0.14;
-
-        thinFriend.style.transform = `translate(${thinX}px, ${thinY}px) rotate(-8deg)`;
-        chubbyFriend.style.transform = `translate(${chubbyX}px, ${chubbyY}px) rotate(7deg)`;
-        requestAnimationFrame(moveCursorFriends);
-      }
-
-      moveCursorFriends();
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
