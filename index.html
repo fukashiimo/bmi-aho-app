@@ -41,6 +41,14 @@
         overflow-x: hidden;
       }
 
+      body,
+      .ticker,
+      .noise,
+      .cursor-friends {
+        cursor: default;
+        user-select: none;
+      }
+
       main {
         width: min(100%, 560px);
         position: relative;
@@ -154,12 +162,27 @@
         grid-template-columns: auto 1fr;
         min-height: 48px;
         padding: 10px 12px;
+        position: relative;
+        transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
       }
 
       .gender-option:has(input:checked) {
+        background: #fff5eb;
         border-color: var(--accent);
-        box-shadow: 4px 4px 0 rgba(31, 36, 40, 0.2);
-        transform: translate(-2px, -2px) rotate(-1deg);
+        box-shadow: inset 0 0 0 3px rgba(226, 77, 61, 0.14), 0 0 0 2px rgba(226, 77, 61, 0.08);
+      }
+
+      .gender-option:has(input:checked)::after {
+        background: var(--yellow);
+        border: 2px solid var(--line);
+        border-radius: 999px;
+        content: "";
+        height: 13px;
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        transform: rotate(3deg);
+        width: 13px;
       }
 
       .gender-option input {
@@ -310,6 +333,74 @@
         animation: float-right 4.1s ease-in-out infinite;
       }
 
+      .cursor-friends {
+        height: 0;
+        left: 0;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        width: 0;
+        z-index: 20;
+      }
+
+      .cursor-character {
+        align-items: center;
+        background: #fff;
+        border: 3px solid var(--line);
+        border-radius: 50%;
+        box-shadow: 3px 3px 0 rgba(31, 36, 40, 0.22);
+        display: grid;
+        font-size: 10px;
+        font-weight: 900;
+        height: 46px;
+        justify-items: center;
+        line-height: 1;
+        opacity: 0;
+        position: absolute;
+        transform: translate(-999px, -999px);
+        transition: opacity 160ms ease;
+        width: 46px;
+      }
+
+      .cursor-character::before,
+      .cursor-character::after {
+        background: var(--line);
+        border-radius: 999px;
+        content: "";
+        height: 5px;
+        position: absolute;
+        top: 14px;
+        width: 5px;
+      }
+
+      .cursor-character::before {
+        left: 13px;
+      }
+
+      .cursor-character::after {
+        right: 13px;
+      }
+
+      .cursor-character span {
+        margin-top: 10px;
+      }
+
+      .cursor-character.thin {
+        border-radius: 18px 18px 999px 999px;
+        height: 58px;
+        width: 34px;
+      }
+
+      .cursor-character.chubby {
+        background: #ffe8a3;
+        height: 54px;
+        width: 58px;
+      }
+
+      .cursor-friends.is-visible .cursor-character {
+        opacity: 1;
+      }
+
       @keyframes title-wiggle {
         0%,
         88%,
@@ -408,7 +499,8 @@
         }
 
         .header::after,
-        .noise {
+        .noise,
+        .cursor-friends {
           display: none;
         }
       }
@@ -426,6 +518,11 @@
     </style>
   </head>
   <body>
+    <div class="cursor-friends" aria-hidden="true">
+      <div class="cursor-character thin"><span aria-hidden="true">ほそ</span></div>
+      <div class="cursor-character chubby"><span aria-hidden="true">ぽちゃ</span></div>
+    </div>
+
     <main>
       <div class="noise left" aria-hidden="true">BMI</div>
       <div class="noise right" aria-hidden="true">判定</div>
@@ -483,6 +580,9 @@
       const weightInput = document.querySelector("#weight");
       const result = document.querySelector("#result");
       const genderInputs = document.querySelectorAll("input[name='gender']");
+      const cursorFriends = document.querySelector(".cursor-friends");
+      const thinFriend = document.querySelector(".cursor-character.thin");
+      const chubbyFriend = document.querySelector(".cursor-character.chubby");
       const bmiJudgements = [
         {
           max: 15,
@@ -633,9 +733,36 @@
         genderInput.addEventListener("change", () => {
           if (genderInput.checked) {
             heightInput.value = genderInput.dataset.defaultHeight;
+            heightInput.blur();
           }
         });
       });
+
+      let pointerX = window.innerWidth / 2;
+      let pointerY = window.innerHeight / 2;
+      let thinX = pointerX;
+      let thinY = pointerY;
+      let chubbyX = pointerX;
+      let chubbyY = pointerY;
+
+      window.addEventListener("pointermove", (event) => {
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        cursorFriends.classList.add("is-visible");
+      });
+
+      function moveCursorFriends() {
+        thinX += (pointerX + 18 - thinX) * 0.22;
+        thinY += (pointerY + 24 - thinY) * 0.22;
+        chubbyX += (pointerX + 50 - chubbyX) * 0.14;
+        chubbyY += (pointerY + 36 - chubbyY) * 0.14;
+
+        thinFriend.style.transform = `translate(${thinX}px, ${thinY}px) rotate(-8deg)`;
+        chubbyFriend.style.transform = `translate(${chubbyX}px, ${chubbyY}px) rotate(7deg)`;
+        requestAnimationFrame(moveCursorFriends);
+      }
+
+      moveCursorFriends();
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
