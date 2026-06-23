@@ -228,7 +228,7 @@
       <section class="app" aria-labelledby="app-title">
         <div class="header">
           <h1 id="app-title">BMIアホアプリ</h1>
-          <p>BMIで雑に判定して、だいぶ余計な一言を返します。</p>
+          <p>BMIで細かめに判定して、だいぶ余計な一言を返します。</p>
         </div>
 
         <form id="bmi-form">
@@ -277,39 +277,129 @@
       const genderInputs = document.querySelectorAll("input[name='gender']");
       const bmiJudgements = [
         {
-          max: 16,
-          message: "細すぎー",
-          comment: "風が吹いたら会議の資料より先に飛びそう。ちゃんと食べて。",
+          max: 15,
+          message: "細すぎ警報ー",
+          comment: "風どころか深呼吸で移動しそう。食事をイベント扱いしないで毎日やって。",
           className: "danger",
         },
         {
-          max: 18.5,
+          max: 16,
+          message: "かなり痩せすぎー",
+          comment: "体重計が『もう少し数字をください』って泣いてる。ちゃんと食べよ。",
+          className: "danger",
+        },
+        {
+          max: 17,
+          message: "だいぶ痩せすぎー",
+          comment: "影のほうが存在感ありそう。栄養までミニマリストにしなくていい。",
+          className: "too-thin",
+        },
+        {
+          max: 18,
           message: "痩せすぎー",
           comment: "体重計に遠慮しすぎ。人生まで軽量化しなくていい。",
           className: "too-thin",
         },
         {
-          max: 25,
+          max: 18.5,
+          message: "ギリ痩せすぎー",
+          comment: "標準の玄関前でインターホン押さずに帰ってる。あと少し食べよ。",
+          className: "too-thin",
+        },
+        {
+          max: 19,
+          message: "標準入りたてじゃん！",
+          comment: "ようこそ標準ゾーンへ。まだ端っこだけど入場は入場。",
+          className: "normal",
+        },
+        {
+          max: 20,
+          message: "細め標準じゃん！",
+          comment: "軽やかだけど標準。体重計との関係、わりと良好。",
+          className: "normal",
+        },
+        {
+          max: 21,
+          message: "いい感じ標準ー",
+          comment: "BMIだけ見るならかなり平和。今日は堂々と歩いていい。",
+          className: "normal",
+        },
+        {
+          max: 22,
+          message: "標準ど真ん中寄り！",
+          comment: "数字の収まりがいい。健康診断の紙に対して強気でいける。",
+          className: "normal",
+        },
+        {
+          max: 23,
           message: "標準じゃん！めっちゃいいじゃん！",
           comment: "BMIだけ見たらかなり優等生。今日はドヤ顔していい。",
           className: "normal",
         },
         {
-          max: 30,
+          max: 24,
+          message: "標準の後半ー",
+          comment: "まだ標準。とはいえ油断すると境界線が手招きしてくる位置。",
+          className: "normal",
+        },
+        {
+          max: 25,
+          message: "標準ギリギリー",
+          comment: "標準ゾーンの出口で片足だけ外に出してる。踏みとどまれ。",
+          className: "normal",
+        },
+        {
+          max: 26,
+          message: "ちょい太り気味ー",
+          comment: "標準から一歩出た。まだ散歩で戻れる距離だから今のうち。",
+          className: "warning",
+        },
+        {
+          max: 27,
           message: "太り気味ー",
           comment: "ちょっと体が人生の余白を取りすぎてる。ここで止めとこ。",
           className: "warning",
         },
         {
-          max: 35,
+          max: 28,
+          message: "しっかり太り気味ー",
+          comment: "服が先に会議を開き始める頃合い。現実と打ち合わせして。",
+          className: "warning",
+        },
+        {
+          max: 29,
+          message: "だいぶ太り気味ー",
+          comment: "体が『備蓄は任せろ』って顔してる。災害対策を体でやらなくていい。",
+          className: "warning",
+        },
+        {
+          max: 30,
+          message: "太り過ぎ目前ー",
+          comment: "境界線の上で反復横跳びしてる。そろそろ戻る方向に跳んで。",
+          className: "warning",
+        },
+        {
+          max: 32,
           message: "太り過ぎー",
           comment: "もう体重計が仕事を辞めたがってる。明日からじゃなくて今日から動こ。",
           className: "danger",
         },
         {
-          max: Infinity,
+          max: 35,
           message: "かなり太り過ぎー",
           comment: "これは体が自分名義で増築申請してる。健康診断に先回りされる前に対策して。",
+          className: "danger",
+        },
+        {
+          max: 40,
+          message: "本格的に太り過ぎー",
+          comment: "体重計の上に乗るたび労災申請されそう。笑ってる場合ではあるけど対策して。",
+          className: "danger",
+        },
+        {
+          max: Infinity,
+          message: "伝説級に太り過ぎー",
+          comment: "BMIがラスボスみたいな数値。まずは医療と運動を味方にして攻略しよ。",
           className: "danger",
         },
       ];
