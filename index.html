@@ -26,6 +26,11 @@
         box-sizing: border-box;
       }
 
+      html {
+        overflow-x: hidden;
+        width: 100%;
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
@@ -39,6 +44,7 @@
         place-items: center;
         padding: 24px;
         overflow-x: hidden;
+        width: 100%;
       }
 
       body,
@@ -50,8 +56,9 @@
       }
 
       main {
-        width: min(calc(100vw - 48px), 560px);
+        max-width: 560px;
         position: relative;
+        width: calc(100vw - 48px);
         z-index: 1;
       }
 
@@ -63,6 +70,7 @@
         overflow: hidden;
         position: relative;
         transform: rotate(-0.4deg);
+        width: 100%;
       }
 
       .header {
@@ -481,7 +489,8 @@
         }
 
         main {
-          width: min(calc(100vw - 24px), 560px);
+          max-width: none;
+          width: calc(100vw - 24px);
         }
 
         .header,
