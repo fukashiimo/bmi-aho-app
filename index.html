@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BMIアホアプリ</title>
+    <title>BMI毒舌判定機</title>
     <style>
       :root {
         color-scheme: light;
@@ -156,19 +156,29 @@
         background: #f8fbff;
         border: 2px solid var(--line);
         border-radius: 8px;
+        box-shadow: none;
+        color: var(--ink);
         cursor: pointer;
         display: grid;
         font-size: 16px;
         gap: 10px;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 1fr;
         min-height: 48px;
         padding: 10px 12px;
+        place-items: center;
+        transition: none;
       }
 
-      .gender-option input {
-        accent-color: var(--accent);
-        min-height: auto;
-        width: auto;
+      .gender-option[aria-pressed="true"] {
+        background: #fff5eb;
+        border-color: var(--accent);
+      }
+
+      .gender-option:hover,
+      .gender-option:active {
+        background: #fff5eb;
+        box-shadow: none;
+        transform: none;
       }
 
       .fields {
@@ -202,7 +212,7 @@
         outline: 4px solid rgba(226, 77, 61, 0.2);
       }
 
-      button {
+      button[type="submit"] {
         min-height: 50px;
         border: 3px solid var(--line);
         border-radius: 8px;
@@ -217,13 +227,13 @@
         transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
       }
 
-      button:hover {
+      button[type="submit"]:hover {
         background: var(--accent-dark);
         transform: translate(-2px, -2px) rotate(1deg);
         box-shadow: 7px 7px 0 var(--line);
       }
 
-      button:active {
+      button[type="submit"]:active {
         transform: translate(3px, 3px) rotate(0deg);
         box-shadow: 2px 2px 0 var(--line);
       }
@@ -564,7 +574,7 @@
       <div class="noise right" aria-hidden="true">判定</div>
       <section class="app" aria-labelledby="app-title">
         <div class="header">
-          <h1 id="app-title">BMIアホアプリ</h1>
+          <h1 id="app-title">BMI毒舌判定機</h1>
           <p>BMIで細かめに判定して、だいぶ余計な一言を返します。</p>
         </div>
 
@@ -576,15 +586,13 @@
           <fieldset>
             <legend>性別</legend>
             <div class="gender-options">
-              <label class="gender-option">
-                <input type="radio" name="gender" value="male" data-default-height="171" checked>
+              <button class="gender-option" type="button" data-gender="male" data-default-height="171" aria-pressed="true">
                 男
-              </label>
+              </button>
 
-              <label class="gender-option">
-                <input type="radio" name="gender" value="female" data-default-height="158">
+              <button class="gender-option" type="button" data-gender="female" data-default-height="158" aria-pressed="false">
                 女
-              </label>
+              </button>
             </div>
           </fieldset>
 
@@ -615,7 +623,7 @@
       const heightInput = document.querySelector("#height");
       const weightInput = document.querySelector("#weight");
       const result = document.querySelector("#result");
-      const genderInputs = document.querySelectorAll("input[name='gender']");
+      const genderButtons = document.querySelectorAll(".gender-option");
       const backgroundCharacters = document.querySelectorAll(".background-character");
       const bmiJudgements = [
         {
@@ -763,11 +771,12 @@
         result.classList.add("is-popping");
       }
 
-      genderInputs.forEach((genderInput) => {
-        genderInput.addEventListener("change", () => {
-          if (genderInput.checked) {
-            heightInput.value = genderInput.dataset.defaultHeight;
-          }
+      genderButtons.forEach((genderButton) => {
+        genderButton.addEventListener("click", () => {
+          genderButtons.forEach((button) => {
+            button.setAttribute("aria-pressed", String(button === genderButton));
+          });
+          heightInput.value = genderButton.dataset.defaultHeight;
         });
       });
 
