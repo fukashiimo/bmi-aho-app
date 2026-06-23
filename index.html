@@ -15,6 +15,8 @@
         --accent: #e24d3d;
         --accent-dark: #b73429;
         --ok: #22704d;
+        --warn: #a35d00;
+        --danger: #9c2838;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
@@ -187,6 +189,14 @@
         color: var(--ok);
       }
 
+      .message.warning {
+        color: var(--warn);
+      }
+
+      .message.danger {
+        color: var(--danger);
+      }
+
       .detail {
         color: var(--muted);
         font-size: 14px;
@@ -218,7 +228,7 @@
       <section class="app" aria-labelledby="app-title">
         <div class="header">
           <h1 id="app-title">BMIアホアプリ</h1>
-          <p>判定対象: 痩せすぎだけ</p>
+          <p>BMIで雑に判定して、だいぶ余計な一言を返します。</p>
         </div>
 
         <form id="bmi-form">
@@ -265,6 +275,44 @@
       const weightInput = document.querySelector("#weight");
       const result = document.querySelector("#result");
       const genderInputs = document.querySelectorAll("input[name='gender']");
+      const bmiJudgements = [
+        {
+          max: 16,
+          message: "細すぎー",
+          comment: "風が吹いたら会議の資料より先に飛びそう。ちゃんと食べて。",
+          className: "danger",
+        },
+        {
+          max: 18.5,
+          message: "痩せすぎー",
+          comment: "体重計に遠慮しすぎ。人生まで軽量化しなくていい。",
+          className: "too-thin",
+        },
+        {
+          max: 25,
+          message: "標準じゃん！めっちゃいいじゃん！",
+          comment: "BMIだけ見たらかなり優等生。今日はドヤ顔していい。",
+          className: "normal",
+        },
+        {
+          max: 30,
+          message: "太り気味ー",
+          comment: "ちょっと体が人生の余白を取りすぎてる。ここで止めとこ。",
+          className: "warning",
+        },
+        {
+          max: 35,
+          message: "太り過ぎー",
+          comment: "もう体重計が仕事を辞めたがってる。明日からじゃなくて今日から動こ。",
+          className: "danger",
+        },
+        {
+          max: Infinity,
+          message: "かなり太り過ぎー",
+          comment: "これは体が自分名義で増築申請してる。健康診断に先回りされる前に対策して。",
+          className: "danger",
+        },
+      ];
 
       function renderResult(message, detail, className) {
         result.innerHTML = "";
@@ -302,13 +350,9 @@
         const heightM = heightCm / 100;
         const bmi = weightKg / (heightM * heightM);
         const roundedBmi = bmi.toFixed(1);
+        const judgement = bmiJudgements.find((item) => bmi < item.max);
 
-        if (bmi < 18.5) {
-          renderResult("痩せすぎー", `BMIは${roundedBmi}です。`, "too-thin");
-          return;
-        }
-
-        renderResult("痩せすぎではないー", `BMIは${roundedBmi}です。`, "normal");
+        renderResult(judgement.message, `BMIは${roundedBmi}です。${judgement.comment}`, judgement.className);
       });
     </script>
   </body>
