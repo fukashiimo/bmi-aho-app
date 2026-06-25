@@ -360,7 +360,11 @@
         line-height: 1;
         opacity: 0.86;
         position: absolute;
-        transition: left 7s ease-in-out, top 7s ease-in-out, transform 7s ease-in-out;
+        transition:
+          left 6.2s cubic-bezier(0.22, 1, 0.36, 1),
+          top 6.2s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 6.2s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: left, top, transform;
         width: 46px;
       }
 
@@ -399,6 +403,19 @@
         width: 58px;
       }
 
+      .background-character.badge {
+        background: #dff5ff;
+        border-radius: 14px;
+        height: 42px;
+        width: 50px;
+      }
+
+      .background-character.round {
+        background: #e9ffd8;
+        height: 52px;
+        width: 52px;
+      }
+
       .background-character.one {
         transform: rotate(-9deg);
       }
@@ -413,6 +430,22 @@
 
       .background-character.four {
         transform: rotate(-4deg);
+      }
+
+      .background-character.five {
+        transform: rotate(6deg);
+      }
+
+      .background-character.six {
+        transform: rotate(-11deg);
+      }
+
+      .background-character.seven {
+        transform: rotate(12deg);
+      }
+
+      .background-character.eight {
+        transform: rotate(-7deg);
       }
 
       @keyframes title-wiggle {
@@ -630,8 +663,12 @@
     <div class="background-friends" aria-hidden="true">
       <div class="background-character thin one"><span aria-hidden="true">ほそ</span></div>
       <div class="background-character chubby two"><span aria-hidden="true">ぽちゃ</span></div>
-      <div class="background-character chubby three"><span aria-hidden="true">ぽちゃ</span></div>
+      <div class="background-character chubby three"><span aria-hidden="true">むち</span></div>
       <div class="background-character thin four"><span aria-hidden="true">ほそ</span></div>
+      <div class="background-character badge five"><span aria-hidden="true">標準</span></div>
+      <div class="background-character round six"><span aria-hidden="true">ゆる</span></div>
+      <div class="background-character chubby seven"><span aria-hidden="true">ぽちゃ</span></div>
+      <div class="background-character badge eight"><span aria-hidden="true">ふつう</span></div>
     </div>
 
     <main>
@@ -690,6 +727,7 @@
       const result = document.querySelector("#result");
       const genderButtons = document.querySelectorAll(".gender-option");
       const backgroundCharacters = document.querySelectorAll(".background-character");
+      const backgroundLabels = ["ほそ", "ぽちゃ", "むち", "標準", "ゆる", "ふつう"];
       const bmiJudgements = [
         {
           max: 15,
@@ -848,10 +886,14 @@
       });
 
       const backgroundZones = [
-        { x: [0, 18], y: [10, 40] },
-        { x: [76, 94], y: [8, 38] },
-        { x: [0, 20], y: [58, 86] },
-        { x: [76, 94], y: [56, 86] },
+        { x: [0, 16], y: [8, 34] },
+        { x: [78, 96], y: [8, 32] },
+        { x: [0, 18], y: [62, 90] },
+        { x: [78, 96], y: [58, 88] },
+        { x: [18, 34], y: [16, 40] },
+        { x: [64, 82], y: [18, 40] },
+        { x: [16, 36], y: [58, 84] },
+        { x: [60, 80], y: [56, 84] },
       ];
 
       function randomBetween(min, max) {
@@ -860,17 +902,27 @@
 
       function moveBackgroundCharacter(character, index) {
         const zone = backgroundZones[index % backgroundZones.length];
-        const duration = randomBetween(8, 14);
+        const duration = randomBetween(4.8, 7.2);
 
         character.style.transitionDuration = `${duration}s`;
+        character.style.transitionTimingFunction = "cubic-bezier(0.22, 1, 0.36, 1)";
         character.style.left = `${randomBetween(zone.x[0], zone.x[1])}%`;
         character.style.top = `${randomBetween(zone.y[0], zone.y[1])}%`;
-        character.style.transform = `rotate(${randomBetween(-14, 14)}deg)`;
+        character.style.transform = `rotate(${randomBetween(-16, 16)}deg) scale(${randomBetween(0.92, 1.08)})`;
+      }
+
+      function scheduleBackgroundCharacter(character, index) {
+        const cycle = () => {
+          moveBackgroundCharacter(character, index);
+          window.setTimeout(cycle, randomBetween(1100, 2600));
+        };
+
+        window.setTimeout(cycle, randomBetween(0, 700));
       }
 
       backgroundCharacters.forEach((character, index) => {
-        moveBackgroundCharacter(character, index);
-        setInterval(() => moveBackgroundCharacter(character, index), randomBetween(5200, 8200));
+        character.querySelector("span").textContent = backgroundLabels[index % backgroundLabels.length];
+        scheduleBackgroundCharacter(character, index);
       });
 
       const inputFields = [heightInput, weightInput];
